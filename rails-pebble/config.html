@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Rails Configuration</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: #f5f5f5;
+            padding: 0;
+            margin: 0;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .section {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #333;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 6px;
+            color: #555;
+            font-size: 14px;
+        }
+
+        .form-group select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            transition: border-color 0.2s;
+        }
+
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-group input[type="number"] {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            transition: border-color 0.2s;
+        }
+
+        .form-group input[type="number"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .toggle-group {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .toggle-group:last-child {
+            border-bottom: none;
+        }
+
+        .toggle-group label {
+            font-weight: 500;
+            color: #555;
+            font-size: 14px;
+        }
+
+        .toggle {
+            position: relative;
+            width: 50px;
+            height: 28px;
+        }
+
+        .toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.3s;
+            border-radius: 28px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: 0.3s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #667eea;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(22px);
+        }
+
+        .theme-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .theme-option {
+            position: relative;
+            cursor: pointer;
+            border: 3px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .theme-option:hover {
+            border-color: #667eea;
+        }
+
+        .theme-option.selected {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .theme-option input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+        }
+
+        .theme-color {
+            width: 100%;
+            height: 50px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .theme-preview {
+            width: 30%;
+            height: 8px;
+            border-radius: 4px;
+        }
+
+        .theme-name {
+            font-size: 13px;
+            font-weight: 500;
+            color: #555;
+        }
+
+        .field-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .save-button {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .save-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+        }
+
+        .save-button:active {
+            transform: translateY(0);
+        }
+
+        .help-text {
+            font-size: 12px;
+            color: #888;
+            margin-top: 5px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>⚡ Rails Watch Face</h1>
+        <p>Customize your watch face</p>
+    </div>
+
+    <div class="container">
+        <!-- Theme Selection -->
+        <div class="section">
+            <div class="section-title">🎨 Theme & Colors</div>
+            <div class="form-group">
+                <label>Base Theme</label>
+                <select id="baseTheme">
+                    <option value="0">Dark</option>
+                    <option value="1">Light</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Accent Color</label>
+                <div class="theme-grid" id="accentGrid">
+                    <!-- Accent colors will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Data Fields -->
+        <div class="section">
+            <div class="section-title">📊 Data Fields</div>
+            <p class="help-text">Configure what appears in each of the 6 data field slots</p>
+            <div class="field-grid" style="margin-top: 15px;">
+                <div class="form-group">
+                    <label>Field 1 (Top Left)</label>
+                    <select id="field1"></select>
+                </div>
+                <div class="form-group">
+                    <label>Field 2 (Top Middle)</label>
+                    <select id="field2"></select>
+                </div>
+                <div class="form-group">
+                    <label>Field 3 (Top Right)</label>
+                    <select id="field3"></select>
+                </div>
+                <div class="form-group">
+                    <label>Field 4 (Bottom Left)</label>
+                    <select id="field4"></select>
+                </div>
+                <div class="form-group">
+                    <label>Field 5 (Bottom Middle)</label>
+                    <select id="field5"></select>
+                </div>
+                <div class="form-group">
+                    <label>Field 6 (Bottom Right)</label>
+                    <select id="field6"></select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gauges -->
+        <div class="section">
+            <div class="section-title">📈 Rail Gauges</div>
+            <p class="help-text">Choose what progress the top and bottom rail gauges display</p>
+            <div class="form-group" style="margin-top: 15px;">
+                <label>Top Rail Gauge</label>
+                <select id="gauge1"></select>
+            </div>
+            <div class="form-group">
+                <label>Bottom Rail Gauge</label>
+                <select id="gauge2"></select>
+            </div>
+        </div>
+
+        <!-- Gauge Maximums -->
+        <div class="section">
+            <div class="section-title">🎯 Gauge Goals</div>
+            <p class="help-text">Set the maximum value for each gauge (100% = goal reached)</p>
+            <div class="form-group" style="margin-top: 15px;">
+                <label>Steps Goal (0 = Auto: 7-day avg + 10%)</label>
+                <input type="number" id="gaugeMaxSteps" min="0" max="50000" step="1000" placeholder="0 for auto">
+            </div>
+            <div class="form-group">
+                <label>Calories Goal</label>
+                <input type="number" id="gaugeMaxCalories" min="500" max="5000" step="100" placeholder="2000">
+            </div>
+            <div class="form-group">
+                <label>Distance Goal (meters)</label>
+                <input type="number" id="gaugeMaxDistance" min="1000" max="20000" step="1000" placeholder="8000">
+            </div>
+        </div>
+
+        <!-- Time & Temperature Format -->
+        <div class="section">
+            <div class="section-title">🕐 Format Settings</div>
+            <div class="form-group">
+                <label>Time Format</label>
+                <select id="timeFormat">
+                    <option value="0">12 Hour (2:45 PM)</option>
+                    <option value="1">24 Hour (14:45)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Temperature Unit</label>
+                <select id="tempUnit">
+                    <option value="0">Celsius (°C)</option>
+                    <option value="1">Fahrenheit (°F)</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Display Options -->
+        <div class="section">
+            <div class="section-title">👁️ Display Options</div>
+            <div class="toggle-group">
+                <label>Show Phone Connection Icon</label>
+                <label class="toggle">
+                    <input type="checkbox" id="showPhone">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+
+        <!-- Save Button -->
+        <button class="save-button" onclick="saveConfig()">💾 Save & Return to Watch</button>
+    </div>
+
+    <script>
+        // Accent color definitions
+        const accentColors = [
+            { id: 0, name: 'Blue', color: '#00A2E8' },
+            { id: 1, name: 'Green', color: '#4CAF50' },
+            { id: 2, name: 'Red', color: '#F44336' },
+            { id: 3, name: 'Amber', color: '#FFB74D' },
+            { id: 4, name: 'Purple', color: '#9C27B0' },
+            { id: 5, name: 'Cyan', color: '#00BCD4' }
+        ];
+
+        // Field type definitions
+        const fieldTypes = [
+            { id: 0, name: 'None' },
+            { id: 1, name: 'Steps' },
+            { id: 2, name: 'Calories' },
+            { id: 3, name: 'Distance (km)' },
+            { id: 5, name: 'Heart Rate' },
+            { id: 6, name: 'Weather' },
+            { id: 7, name: 'Battery %' },
+            { id: 8, name: 'Phone Status' }
+        ];
+
+        // Gauge type definitions
+        const gaugeTypes = [
+            { id: 0, name: 'None' },
+            { id: 1, name: 'Steps Progress' },
+            { id: 2, name: 'Calories Progress' },
+            { id: 3, name: 'Distance Progress' },
+            { id: 6, name: 'Battery Level' }
+        ];
+
+        // Load config from URL hash or use default
+        var CURRENT_CONFIG = {};
+        try {
+            var hash = window.location.hash.substring(1);
+            if (hash) {
+                CURRENT_CONFIG = JSON.parse(decodeURIComponent(hash));
+                console.log('Loaded config from URL:', CURRENT_CONFIG);
+            }
+        } catch (e) {
+            console.log('Error parsing config from URL:', e);
+        }
+
+        // Get config value from CURRENT_CONFIG or use default
+        function getConfigValue(key, defaultValue) {
+            if (CURRENT_CONFIG[key] !== undefined) {
+                return CURRENT_CONFIG[key];
+            }
+            return defaultValue;
+        }
+
+        // Initialize accent color grid
+        function initAccents() {
+            const grid = document.getElementById('accentGrid');
+            const selectedAccent = parseInt(getConfigValue('accentColor', 0));
+
+            accentColors.forEach(accent => {
+                const option = document.createElement('div');
+                option.className = 'theme-option' + (accent.id === selectedAccent ? ' selected' : '');
+                option.style.width = '80px';
+                option.innerHTML = `
+                    <input type="radio" name="accentColor" value="${accent.id}" ${accent.id === selectedAccent ? 'checked' : ''}>
+                    <div class="theme-color" style="background: ${accent.color}; height: 40px;"></div>
+                    <div class="theme-name">${accent.name}</div>
+                `;
+                option.onclick = function() {
+                    document.querySelectorAll('#accentGrid .theme-option').forEach(el => el.classList.remove('selected'));
+                    option.classList.add('selected');
+                    option.querySelector('input').checked = true;
+                };
+                grid.appendChild(option);
+            });
+        }
+
+        function initBaseTheme() {
+            document.getElementById('baseTheme').value = getConfigValue('theme', 1);
+        }
+
+        // Initialize field selects
+        function initFields() {
+            for (let i = 1; i <= 6; i++) {
+                const select = document.getElementById('field' + i);
+                const defaultValue = parseInt(getConfigValue('field' + i, i));
+
+                fieldTypes.forEach(type => {
+                    const option = document.createElement('option');
+                    option.value = type.id;
+                    option.textContent = type.name;
+                    if (type.id === defaultValue) option.selected = true;
+                    select.appendChild(option);
+                });
+            }
+        }
+
+        // Initialize gauge selects
+        function initGauges() {
+            const gauge1 = document.getElementById('gauge1');
+            const gauge2 = document.getElementById('gauge2');
+
+            const gauge1Default = parseInt(getConfigValue('gauge1', 1));
+            const gauge2Default = parseInt(getConfigValue('gauge2', 2));
+
+            gaugeTypes.forEach(type => {
+                const opt1 = document.createElement('option');
+                opt1.value = type.id;
+                opt1.textContent = type.name;
+                if (type.id === gauge1Default) opt1.selected = true;
+                gauge1.appendChild(opt1);
+
+                const opt2 = document.createElement('option');
+                opt2.value = type.id;
+                opt2.textContent = type.name;
+                if (type.id === gauge2Default) opt2.selected = true;
+                gauge2.appendChild(opt2);
+            });
+        }
+
+        // Initialize gauge maximums
+        function initGaugeMaximums() {
+            document.getElementById('gaugeMaxSteps').value = getConfigValue('gaugeMaxSteps', 0);
+            document.getElementById('gaugeMaxCalories').value = getConfigValue('gaugeMaxCalories', 2000);
+            document.getElementById('gaugeMaxDistance').value = getConfigValue('gaugeMaxDistance', 8000);
+        }
+
+        // Initialize toggles
+        function initToggles() {
+            document.getElementById('timeFormat').value = getConfigValue('timeFormat', 0);
+            document.getElementById('tempUnit').value = getConfigValue('tempUnit', 1);
+            document.getElementById('showPhone').checked = getConfigValue('showPhone', 1) === 1;
+        }
+
+        // Save configuration
+        function saveConfig() {
+            const config = {
+                theme: parseInt(document.getElementById('baseTheme').value),
+                accentColor: parseInt(document.querySelector('input[name="accentColor"]:checked').value),
+                field1: parseInt(document.getElementById('field1').value),
+                field2: parseInt(document.getElementById('field2').value),
+                field3: parseInt(document.getElementById('field3').value),
+                field4: parseInt(document.getElementById('field4').value),
+                field5: parseInt(document.getElementById('field5').value),
+                field6: parseInt(document.getElementById('field6').value),
+                gauge1: parseInt(document.getElementById('gauge1').value),
+                gauge2: parseInt(document.getElementById('gauge2').value),
+                gaugeMaxSteps: parseInt(document.getElementById('gaugeMaxSteps').value) || 0,
+                gaugeMaxCalories: parseInt(document.getElementById('gaugeMaxCalories').value) || 2000,
+                gaugeMaxDistance: parseInt(document.getElementById('gaugeMaxDistance').value) || 8000,
+                timeFormat: parseInt(document.getElementById('timeFormat').value),
+                tempUnit: parseInt(document.getElementById('tempUnit').value),
+                showPhone: document.getElementById('showPhone').checked ? 1 : 0
+            };
+
+            document.location = 'pebblejs://close#' + encodeURIComponent(JSON.stringify(config));
+        }
+
+        // Initialize on load
+        initBaseTheme();
+        initAccents();
+        initFields();
+        initGauges();
+        initGaugeMaximums();
+        initToggles();
+    </script>
+</body>
+</html>
