@@ -362,6 +362,13 @@
                     <option value="1">Fahrenheit (°F)</option>
                 </select>
             </div>
+            <div class="form-group">
+                <label>Distance Unit</label>
+                <select id="distUnit">
+                    <option value="0">Kilometers (km)</option>
+                    <option value="1">Miles (mi)</option>
+                </select>
+            </div>
         </div>
 
         <!-- Display Options -->
@@ -396,11 +403,11 @@
             { id: 0, name: 'None' },
             { id: 1, name: 'Steps' },
             { id: 2, name: 'Calories' },
-            { id: 3, name: 'Distance (km)' },
-            { id: 5, name: 'Heart Rate' },
-            { id: 6, name: 'Weather' },
-            { id: 7, name: 'Battery %' },
-            { id: 8, name: 'Phone Status' }
+            { id: 3, name: 'Distance' },
+            { id: 4, name: 'Heart Rate' },
+            { id: 5, name: 'Weather' },
+            { id: 6, name: 'Battery %' },
+            { id: 7, name: 'Phone Status' }
         ];
 
         // Gauge type definitions
@@ -509,6 +516,7 @@
         function initToggles() {
             document.getElementById('timeFormat').value = getConfigValue('timeFormat', 0);
             document.getElementById('tempUnit').value = getConfigValue('tempUnit', 1);
+            document.getElementById('distUnit').value = getConfigValue('distUnit', 1);
             document.getElementById('showPhone').checked = getConfigValue('showPhone', 1) === 1;
         }
 
@@ -530,6 +538,7 @@
                 gaugeMaxDistance: parseInt(document.getElementById('gaugeMaxDistance').value) || 8000,
                 timeFormat: parseInt(document.getElementById('timeFormat').value),
                 tempUnit: parseInt(document.getElementById('tempUnit').value),
+                distUnit: parseInt(document.getElementById('distUnit').value),
                 showPhone: document.getElementById('showPhone').checked ? 1 : 0
             };
 
